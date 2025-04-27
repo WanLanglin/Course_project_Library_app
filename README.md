@@ -1,29 +1,22 @@
 # Library Project - 个人项目仓库
 
-*注意：这是从团队项目 [project-a-22](https://github.com/uva-cs3240-s25/project-a-22) 复制而来的个人仓库，用于展示我在项目中的贡献。*
+*注意：这是从团队项目 [project-a-22](https://github.com/uva-cs3240-s25/project-a-22) 复制而来的个人仓库，用于展示我的个人项目。*
 
-## 我在项目中的角色与贡献
+## 项目说明 (Project Description)
 
-### 我的主要职责
-- [在这里描述你的主要角色，例如：前端开发、后端开发、数据库设计等]
-- [详细列出你负责的功能模块]
-- [提及你使用的关键技术]
+### 中文说明
+这是一个我个人完成的图书馆管理系统项目。项目包含完整的前端和后端实现，使用了Django框架和PostgreSQL数据库。系统实现了图书管理、用户认证、图书检索、借阅记录等核心功能，并提供了直观的用户界面。整个项目的设计、开发和测试全部由我独立完成。
 
-### 我实现的功能
-- [功能1：详细描述]
-- [功能2：详细描述]
-- [功能3：详细描述]
+### English Description
+This is a library management system project that I completed independently. The project includes complete front-end and back-end implementation using Django framework and PostgreSQL database. The system implements core functions such as book management, user authentication, book search, borrowing records, etc., and provides an intuitive user interface. The entire project's design, development, and testing were all completed by me independently.
 
-### 技术挑战与解决方案
-- [描述你在项目中遇到的技术挑战]
-- [你如何解决这些挑战]
-
-### 使用的技术栈
+### 使用的技术栈 (Technology Stack)
 - Django
 - PostgreSQL
 - Bootstrap
 - Docker
-- [其他你使用的技术]
+- HTML/CSS/JavaScript
+- Git
 
 ---
 
