@@ -1,0 +1,19 @@
+.left {
+    position: absolute;
+}
+
+.library-navbar {
+    background-color: blue;
+}
+
+.library-navbar-ul li {
+    display: inline;
+}
+
+.nav-link {
+    color: white;
+}
+
+.nav-link:hover {
+    color: grey;
+}

@@ -1,0 +1,13 @@
+.env
+.idea
+.vscode
+*.py[cod]
+*$py.class
+**/__pycache__
+library/__*
+db.sqlite3
+.venv
+staticfiles
+.DS_Store
+notes.md
+aws

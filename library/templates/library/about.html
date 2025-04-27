@@ -1,0 +1,66 @@
+{% extends "library/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">About A22 Team</li>
+                </ol>
+            </nav>
+
+            <!-- Team Introduction -->
+            <div class="card about-card mb-5">
+                <div class="card-body p-4">
+                    <h2 class="mb-4 display-5 text-center">Meet the A22 Team</h2>
+                    <p class="text-center lead mb-4">
+                        We are students from the School of Engineering and Applied Science at the University of Virginia,
+                        building this library management system as part of our coursework.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Project Description -->
+            <h3 class="mb-4">About the Project</h3>
+            <div class="card about-card mb-5">
+                <div class="card-body p-4">
+                    <p>This library management system was developed as part of a course project at the University of Virginia's School of Engineering and Applied Science. Our goal was to create a functional and user-friendly application that demonstrates software engineering principles.</p>
+                    
+                    <h5 class="mt-4">Technologies Used:</h5>
+                    <ul>
+                        <li>Django (Python web framework)</li>
+                        <li>Bootstrap 5 (Frontend framework)</li>
+                        <li>SQLite (Database)</li>
+                        <li>JavaScript (Client-side functionality)</li>
+                    </ul>
+                    
+                    <h5 class="mt-4">Key Features:</h5>
+                    <ul>
+                        <li>Book catalog management</li>
+                        <li>User account system</li>
+                        <li>Book lending and tracking</li>
+                        <li>Collections for organizing books</li>
+                        <li>Responsive design for all devices</li>
+                    </ul>
+                    
+                    <div class="alert alert-info mt-4">
+                        <p class="mb-0"><strong>Note:</strong> This project is for educational purposes only. The books and information shown are not real and are used solely for demonstration.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <h3 class="mb-4">Contact Us</h3>
+            <div class="card about-card">
+                <div class="card-body p-4 text-center">
+                    <p>For more information about this project, please contact us through the University of Virginia School of Engineering and Applied Science.</p>
+                    <a href="https://engineering.virginia.edu/" class="btn btn-primary mt-2" target="_blank">Visit UVA Engineering</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

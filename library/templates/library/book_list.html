@@ -1,0 +1,259 @@
+{% extends "library/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Library Catalog</li>
+                    </ol>
+                </nav>
+                
+            </div>
+
+            <!-- Search and Filter Row -->
+            <div class="row mb-4">
+                <!-- Search Form -->
+                <div class="col-md-9">
+                    <form method="GET" class="d-flex">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search by title, author, or ISBN..." value="{{ request.GET.search }}">
+                            {% if request.GET.search %}
+                                <a href="{% url 'book_list' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Status Filter -->
+                <div class="col-md-3">
+                    <form method="GET" class="d-flex">
+                        <div class="input-group">
+                            <select name="status" class="form-select">
+                                <option value="">All Status</option>
+                                {% for status_code, status_name in status_choices %}
+                                    <option value="{{ status_code }}" {% if request.GET.status == status_code %}selected{% endif %}>
+                                        {{ status_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if request.GET.status %}
+                                <a href="{% url 'book_list' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-secondary">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Recently Added Books -->
+            {% if not request.GET.search and not request.GET.page or request.GET.page == '1' %}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="section-header">Recently Added Books</h4>
+                <small class="text-muted">Showing the {{ recent_books|length }} most recently added books</small>
+            </div>
+            
+            <!-- Book Carousel - Simple Scrolling Row -->
+            <div class="mb-4 mx-0 px-0 book-carousel-wrapper">
+                <!-- Overflow container -->
+                <div class="book-carousel">
+                    <!-- Scrolling row of books -->
+                    <div class="book-carousel-inner">
+                        {% for book in recent_books %}
+                        <div class="book-carousel-item">
+                            <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+                                <div class="card book-card">
+                                    <img src="{{ book.cover.url }}" class="card-img-top" alt="{{ book.title }} cover">
+                                    <span class="badge status-badge {% if book.status == 'available' %}bg-success{% elif book.status == 'checked_out' %}bg-danger{% else %}bg-warning{% endif %}">
+                                        {{ book.get_status_display }}
+                                    </span>
+                                    <div class="card-body p-2">
+                                        <h6 class="card-title mb-1 text-truncate">{{ book.title }}</h6>
+                                        <p class="card-subtitle small text-muted mb-1 text-truncate">by {{ book.author }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% empty %}
+                        <div class="w-100">
+                            <div class="alert alert-info text-center py-3">
+                                <h6 class="mb-0">No recently added books</h6>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Controls -->
+                <button class="book-carousel-control book-carousel-prev" id="carousel-prev" style="opacity: 0; visibility: hidden;">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="book-carousel-control book-carousel-next" id="carousel-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            {% endif %}
+
+            <!-- Add spacing between Recently Added Books and Search Bar -->
+            <div class="mt-4"></div>
+
+            <!-- Books Grid -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="section-header">All Books</h4>
+                <small class="text-muted">Showing {{ books|length }} of {{ total_books_count }} books in the library</small>
+            </div>
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
+                {% for book in books %}
+                <div class="col">
+                    <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+                        <div class="card h-100 book-card">
+                            <img src="{{ book.cover.url }}" class="card-img-top" alt="{{ book.title }} cover">
+                            <span class="badge status-badge {% if book.status == 'available' %}bg-success{% elif book.status == 'checked_out' %}bg-danger{% else %}bg-warning{% endif %}">
+                                {{ book.get_status_display }}
+                            </span>
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1">{{ book.title }}</h6>
+                                <p class="card-subtitle small text-muted mb-1">by {{ book.author }}</p>
+                                {% if request.GET.next %}
+                                <button onclick="event.stopPropagation(); window.location.href='{% url 'add_book_to_collection' collection_pk book.pk %}'" class="btn btn-sm btn-outline-primary w-100">Add to Collection</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                </div>
+                <!-- End of the row to allow full width alert -->
+                <div class="py-5 my-4 text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-book-open fa-4x text-muted mb-3"></i>
+                    </div>
+                    {% if request.GET.search %}
+                        <h4 class="alert-heading">No Results Found</h4>
+                        <p class="mb-2">Your search for "{{ request.GET.search }}" did not match any books in our catalog.</p>
+                        <p class="mb-0">Try different keywords or check your spelling.</p>
+                    {% elif request.GET.status %}
+                        <h4 class="alert-heading">No Books With This Status</h4>
+                        <p class="mb-0">There are currently no books with the "{{ request.GET.status|title }}" status.</p>
+                    {% else %}
+                        <h4 class="alert-heading">No Books Available</h4>
+                        <p class="mb-0">There are currently no books in the library catalog.</p>
+                    {% endif %}
+                </div>
+                <!-- Start a new row to maintain structure -->
+                <div class="row d-none">
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">Previous</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get carousel elements
+    const carousel = document.querySelector('.book-carousel');
+    const inner = document.querySelector('.book-carousel-inner');
+    const prevButton = document.getElementById('carousel-prev');
+    const nextButton = document.getElementById('carousel-next');
+    
+    // Return if no carousel exists on the page
+    if (!carousel || !inner || !prevButton || !nextButton) return;
+    
+    // Calculate scroll amount to show exactly 6 new items
+    const getScrollAmount = () => {
+        // Calculate the width of the visible area including gap
+        const itemWidth = inner.querySelector('.book-carousel-item').offsetWidth;
+        const gap = 15; // Match the CSS gap value
+        return (itemWidth + gap) * 6; // Scroll by exactly 6 items (including gaps)
+    }
+    
+    // Update button states
+    const updateButtonStates = () => {
+        const isAtStart = carousel.scrollLeft <= 0;
+        const isAtEnd = carousel.scrollLeft >= (inner.scrollWidth - carousel.clientWidth - 10);
+        
+        // Hide prev button when at the start
+        if (isAtStart) {
+            prevButton.style.opacity = '0';
+            prevButton.style.visibility = 'hidden';
+        } else {
+            prevButton.style.opacity = '1';
+            prevButton.style.visibility = 'visible';
+        }
+        
+        // Disable next button when at the end
+        if (isAtEnd) {
+            nextButton.style.opacity = '0.3';
+            nextButton.style.cursor = 'not-allowed';
+        } else {
+            nextButton.style.opacity = '1';
+            nextButton.style.cursor = 'pointer';
+        }
+        
+        // Update disabled states
+        prevButton.disabled = isAtStart;
+        nextButton.disabled = isAtEnd;
+    };
+    
+    // Scroll left
+    prevButton.addEventListener('click', () => {
+        carousel.scrollBy({
+            left: -getScrollAmount(),
+            behavior: 'smooth'
+        });
+        setTimeout(updateButtonStates, 300); // Update after scroll animation
+    });
+    
+    // Scroll right
+    nextButton.addEventListener('click', () => {
+        carousel.scrollBy({
+            left: getScrollAmount(),
+            behavior: 'smooth'
+        });
+        setTimeout(updateButtonStates, 300); // Update after scroll animation
+    });
+    
+    // Update on scroll
+    carousel.addEventListener('scroll', updateButtonStates);
+    
+    // Initial update
+    updateButtonStates();
+});
+</script>
+{% endblock %}

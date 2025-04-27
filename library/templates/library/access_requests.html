@@ -1,0 +1,75 @@
+{% extends "library/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+ 
+    <h3>Collection Access Requests</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Collection</th>
+                <th>Requested At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in collection_requests %}
+            <tr>
+                <td>{{ request.user.username }}</td>
+                <td>{{ request.collection.title }}</td>
+                <td>{{ request.requested_at }}</td>
+                <td>
+                    <!-- Approve/Deny Buttons -->
+                    <form method="POST" action="{% url 'approve_request' request.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                    <form method="POST" action="{% url 'deny_request' request.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center">No pending collection access requests.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Book Borrowing Requests</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Book</th>
+                <th>Requested At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in borrowing_requests %}
+            <tr>
+                <td>{{ request.borrower.username }}</td>
+                <td>{{ request.book.title }}</td>
+                <td>{{ request.checkout_date }}</td> <!-- Use checkout_date as requested_at -->
+                <td>
+                    <!-- Approve/Deny Buttons -->
+                    <form method="POST" action="{% url 'approve_borrowing_request' request.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                    <form method="POST" action="{% url 'deny_borrowing_request' request.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center">No pending borrowing requests.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

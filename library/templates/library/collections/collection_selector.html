@@ -1,0 +1,9 @@
+<!-- collection_selector.html -->
+<form method="GET" action="{% url 'add_book_to_collection' 0 book.pk %}">
+    <select name="collection_id">
+        {% for collection in collections %}
+            <option value="{{ collection.pk }}">{{ collection.title }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Add to Collection</button>
+</form>

@@ -1,0 +1,49 @@
+{% extends "library/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">Add Books to Collection: {{ collection.title }}</h2>
+
+            <!-- Search and filter forms (keep as in book_list.html) -->
+
+            <!-- Books Grid -->
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for book in books %}
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="{{ book.cover.url }}" class="card-img-top" alt="{{ book.title }} cover">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">by {{ book.author }}</h6>
+                            <p class="card-text">{{ book.description|truncatewords:30 }}</p>
+                            <div class="mb-2">
+                                <span class="badge {% if book.status == 'available' %}bg-success{% elif book.status == 'checked_out' %}bg-danger{% else %}bg-warning{% endif %}">
+                                    {{ book.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">ISBN: {{ book.isbn }}</small>
+                                <a href="{% url 'add_book_to_collection' collection_pk book.pk %}" class="btn btn-sm btn-primary">Add to Collection</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No books available.
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination (keep as in book_list.html) -->
+
+            <a href="{% url 'collection_detail' collection_pk %}" class="btn btn-secondary mt-4">Back to Collection</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

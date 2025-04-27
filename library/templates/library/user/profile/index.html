@@ -1,0 +1,28 @@
+{% extends "library/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<body>
+    <div class="container">
+        <h2>Profile</h2>
+        <div class="row">
+            <div class="col-md-4">
+                {% if profile.profile_pic %}
+                    <img src="{{ profile.profile_pic.url }}" class="img-thumbnail" style="max-width: 200px;">
+                {% else %}
+                    <img src="{% static 'library/images/default.jpg' %}" class="img-thumbnail" style="max-width: 200px;">
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <p><strong>Name:</strong> {{ user.socialaccount_set.all.0.extra_data.name }}</p>
+                <p><strong>Username:</strong> {{ profile.user.username }}</p>
+                <p><strong>Email:</strong> {{ profile.user.email }}</p>
+                <p><strong>Join Date:</strong> {{ profile.user.date_joined|date:"F j, Y" }}</p>
+                <a class="btn btn-primary" href="{% url 'profile_edit' %}">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+{% endblock %}

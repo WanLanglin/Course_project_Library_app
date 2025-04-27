@@ -1,0 +1,232 @@
+/* General Styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+/* Card Styles */
+.card {
+    transition: transform 0.2s;
+}
+
+/* Only apply hover effect to book cards, not all cards */
+.book-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+/* Badge Styles */
+.badge {
+    font-size: 0.7em;
+    padding: 0.4em 0.8em;
+}
+
+/* Status badge on book cards */
+.book-card {
+    position: relative;
+}
+
+.book-card .status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    font-size: 0.65rem;
+    padding: 0.3em 0.6em;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Navbar Styles */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Logo Styles */
+.navbar-brand svg {
+    /* Flat style, no effects */
+}
+
+/* Form Styles */
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+}
+
+/* Button Styles */
+.btn-outline-primary:hover {
+    transform: translateY(-1px);
+}
+
+.book-card {
+    transition: all 0.2s ease;
+    border: 1px solid #ddd;
+    transform-origin: center;
+}
+
+/* About page cards - no hover effect */
+.about-card {
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Book cover styling */
+.card-img-top {
+    height: 230px;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Card font sizing for smaller cards */
+.book-card .card-title {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+.book-card .card-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Book Carousel Styles */
+.book-carousel-wrapper {
+    position: relative;
+}
+
+.book-carousel {
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px 0;
+    margin: 0;
+    scrollbar-width: none; /* Firefox */
+    scroll-snap-type: x mandatory; /* Enable snap scrolling */
+}
+
+.book-carousel::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+.book-carousel-inner {
+    display: flex;
+    gap: 15px;
+    transition: transform 0.3s ease;
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+}
+
+.book-carousel-item {
+    flex: 0 0 auto;
+    width: calc((100% - 75px) / 6); /* Exactly 6 items per view, accounting for 5 gaps of 15px each */
+    scroll-snap-align: start; /* Enable snap points */
+}
+
+.book-carousel-item .card,
+.book-card {
+    border-radius: 8px;
+    height: 100%;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.book-carousel-item .card-img-top,
+.card-img-top {
+    height: 210px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.book-carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0,0,0,0.4);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.book-carousel-control:hover {
+    background-color: rgba(0,0,0,0.6);
+}
+
+.book-carousel-control:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.book-carousel-prev {
+    left: -20px;
+}
+
+.book-carousel-next {
+    right: -20px;
+}
+
+/* Responsive adjustments for carousel */
+@media (max-width: 1199.98px) {
+    .carousel-item {
+        width: calc(25% - 0.75rem); /* 4 items per view on medium screens */
+    }
+}
+
+@media (max-width: 767.98px) {
+    .carousel-item {
+        width: calc(33.333% - 0.67rem); /* 3 items per view on small screens */
+    }
+}
+
+@media (max-width: 575.98px) {
+    .carousel-item {
+        width: calc(50% - 0.5rem); /* 2 items per view on extra small screens */
+    }
+}
+
+.book-cover {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .book-cover {
+    transform: scale(1.03);
+}
+
+/* User profile picture in navbar */
+.nav-item .rounded-circle {
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Custom dropdown with separate caret */
+span.dropdown-toggle {
+    position: relative;
+    padding-right: 12px;
+}
+
+span.dropdown-toggle::after {
+    display: inline-block;
+    margin-left: 0.255em;
+    vertical-align: 0.255em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+    position: absolute;
+    right: 0;
+    top: 45%;
+}

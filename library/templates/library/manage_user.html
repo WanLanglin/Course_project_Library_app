@@ -1,0 +1,38 @@
+{% extends "library/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<body>
+    <div class="container">
+        <h2>Profile</h2>
+        <div class="row">
+            <div class="col-md-4">
+                {% if profile.profile_pic %}
+                    <img src="{{ profile.profile_pic.url }}" class="img-thumbnail" style="max-width: 200px;">
+                {% else %}
+                    <img src="{% static 'library/images/default.jpg' %}" class="img-thumbnail" style="max-width: 200px;">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <p><strong>Name:</strong> {{ profile.name }}</p>
+                <p><strong>Username:</strong> {{ profile.user.username }}</p>
+                <p><strong>Email:</strong> {{ profile.user.email }}</p>
+                <p><strong>Join Date:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                {% if profile.user.id != user.id %}
+                    <form method="POST" action="{% url 'manage_user' profile.user.pk %}">
+                        {% csrf_token %}
+                        {% if profile.is_librarian %}
+                            <button type="submit" class="btn btn-primary">Demote to Patron</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">Promote to Librarian</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
+                <a href="{% url 'user_list' %}" class="btn btn-outline-secondary mt-3">Back</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+{% endblock %}

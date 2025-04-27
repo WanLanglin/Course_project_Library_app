@@ -1,0 +1,151 @@
+{% extends "library/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">My Books</h2>
+            <!-- Pending Books -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="h5 mb-0">Books Pending Approval</h3>
+                </div>
+                <div class="card-body">
+                    {% if pending_requests %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Book</th>
+                                        <th>ISBN</th>
+                                        <th>Requested At</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in pending_requests %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'book_detail' request.book.pk %}">
+                                                {{ request.book.title }}
+                                            </a>
+                                        </td>
+                                        <td>{{ request.book.isbn }}</td>
+                                        <td>{{ request.checkout_date|date:"M d, Y" }}</td> <!-- Use checkout_date as requested_at -->
+                                        <td>
+                                            <span class="badge bg-warning">
+                                                {{ request.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <!-- Cancel Request Button -->
+                                            <form action="{% url 'cancel_borrowing_request' request.pk %}" method="post" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-danger">Cancel Request</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">You don't have any pending borrowing requests.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Active Loans -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="h5 mb-0">Currently Borrowed Books</h3>
+                </div>
+                <div class="card-body">
+                    {% if active_lendings %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Book</th>
+                                        <th>ISBN</th>
+                                        <th>Checkout Date</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for lending in active_lendings %}
+                                    <tr {% if lending.is_overdue %}class="table-danger"{% endif %}>
+                                        <td>
+                                            <a href="{% url 'book_detail' lending.book.pk %}">
+                                                {{ lending.book.title }}
+                                            </a>
+                                        </td>
+                                        <td>{{ lending.book.isbn }}</td>
+                                        <td>{{ lending.checkout_date|date:"M d, Y" }}</td>
+                                        <td>{{ lending.due_date|date:"M d, Y" }}</td>
+                                        <td>
+                                            <span class="badge {% if lending.status == 'overdue' %}bg-danger{% else %}bg-primary{% endif %}">
+                                                {{ lending.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <form action="{% url 'return_book' lending.id %}" method="post" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-success">Return Book</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">You don't have any books checked out.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Lending History -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="h5 mb-0">Lending History</h3>
+                </div>
+                <div class="card-body">
+                    {% if lending_history %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Book</th>
+                                        <th>ISBN</th>
+                                        <th>Checkout Date</th>
+                                        <th>Return Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for lending in lending_history %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'book_detail' lending.book.pk %}">
+                                                {{ lending.book.title }}
+                                            </a>
+                                        </td>
+                                        <td>{{ lending.book.isbn }}</td>
+                                        <td>{{ lending.checkout_date|date:"M d, Y" }}</td>
+                                        <td>{{ lending.return_date|date:"M d, Y" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">You haven't borrowed any books yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

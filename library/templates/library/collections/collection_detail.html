@@ -1,0 +1,78 @@
+{% extends "library/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">{{ collection.title }}</h2>
+            <p class="card-text">{{ collection.description }}</p>
+            <p class="card-text">Created by: {{ collection.creator.username }}</p>
+            <div class="mb-2">
+                <span class="badge {% if collection.is_private == 'private' %}bg-danger{% else %}bg-success{% endif %}">
+                    {{ collection.get_is_private_display }}
+                </span>
+            </div>
+            <!-- Search Form -->
+            <form method="GET" class="d-flex mb-4">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Search books..." value="{{ search_query }}">
+                    {% if search_query %}
+                        <a href="{% url 'collection_detail' collection.pk %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i> Clear
+                        </a>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+
+            <!-- Books Grid -->
+            <div class="row row-cols-2 row-cols-md-4 g-3">
+                {% for book in books %}
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="{{ book.cover.url }}" class="card-img-top" alt="{{ book.title }} cover">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">{{ book.author }}</p>
+                            <a href="{% url 'book_detail' book.pk %}" class="btn btn-primary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No books found{% if search_query %} matching "{{ search_query }}"{% endif %}.</p>
+                {% endfor %}
+            </div>
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mt-4">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {%endif%}
+            <!-- link back to collection_list -->
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{% url 'collection_list' %}" class="btn btn-secondary mt-4">
+                    Back to Collection List
+                </a>
+                <!-- Add Book to Collection -->
+                {% if request.user == collection.creator or is_librarian %}
+                <a href="{% url 'add_book_to_collection' collection.pk 0 %}" class="btn btn-primary">
+                Add Books to Collection
+                </a>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

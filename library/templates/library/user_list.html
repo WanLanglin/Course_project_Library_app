@@ -1,0 +1,82 @@
+{% extends "library/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Manage Users</li>
+                    </ol>
+                </nav>
+                
+            </div>
+
+            <!-- Search and Filter Row -->
+            <div class="row mb-4">
+                <!-- Search Form -->
+                <div class="col-md-9">
+                    <form method="GET" class="d-flex">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search by ID or username" value="{{ request.GET.search }}">
+                            {% if request.GET.search %}
+                                <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Profiles Grid -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="section-header">All Users</h4>
+            </div>
+            <div class="row  g-3">
+                {% for profile in profiles %}
+                    <a href="{% url 'manage_user' profile.user.pk %}" class="text-decoration-none">
+                        <div class="card h-100 book-card">
+                            <div class="card-body p-2">
+                                {% if profile.is_librarian %}
+                                    <h4>Status: Librarian</h4>
+                                {% else %}
+                                    <h4>Status: Patron</h4>
+                                {% endif %}
+                                {% if profile.profile_pic %}
+                                    <img src="{{ profile.profile_pic.url }}" class="img-thumbnail" style="width: 100px; height: 100px">
+                                {% else %}
+                                    <img src="{% static 'library/images/default.jpg' %}" class="img-thumbnail" style="width: 100px; height: 100px">
+                                {% endif %}
+                                <h6 class="card-title mb-1">{{ profile.user.username }}</h6>
+                                <p class="card-subtitle small text-muted mb-1"> {{ profile.user.id }}</p>
+                                
+                            </div>
+                        </div>
+                    </a>
+            
+                {% empty %}
+                </div>
+
+                <div class="py-5 my-4 text-center">
+                    {% if request.GET.search %}
+                        <h4 class="alert-heading">No Results Found</h4>
+                        <p class="mb-2">Your search for "{{ request.GET.search }}" did not match any registered users.</p>
+                        <p class="mb-0">Try different keywords or check your spelling.</p>
+                    {% else %}
+                        <h4 class="alert-heading">No Users</h4>
+                    {% endif %}
+                </div>
+                <!-- Start a new row to maintain structure -->
+                <div class="row d-none">
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
